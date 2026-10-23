@@ -1,0 +1,12 @@
+{
+  "name": "procureiq-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "npm --prefix procureiq/backend test",
+    "seed": "npm --prefix procureiq/backend run seed",
+    "start:backend": "npm --prefix procureiq/backend start",
+    "start:frontend": "npm --prefix procureiq/frontend run dev",
+    "build": "npm --prefix procureiq/frontend run build"
+  }
+}

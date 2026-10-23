@@ -1,0 +1,542 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+
+:root {
+  --bg-main: #0b0c10;
+  --bg-surface: #12141c;
+  --bg-card: #151822;
+  --bg-card-hover: #1b1e2b;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.18);
+  --text-primary: #ffffff;
+  --text-secondary: #949ab0;
+  --text-muted: #62677a;
+  --accent-white: #ffffff;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #38bdf8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Headings & Text */
+h1, h2, h3, h4, h5, h6 {
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* ========================================================
+   WELCOME / LANDING PAGE (Faithful to Centered Hero Mockup)
+   ======================================================== */
+.welcome-page-wrapper {
+  transition: background-color 0.3s ease;
+}
+
+.welcome-card-canvas {
+  position: relative;
+  border-radius: 18px;
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.45);
+}
+
+.fade-in-content {
+  animation: fadeInModal 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.active-link {
+  font-weight: 700 !important;
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 2px;
+}
+
+.welcome-root {
+  background: radial-gradient(circle at 50% 10%, #151824 0%, #0b0c10 70%);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.welcome-header {
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(11, 12, 16, 0.85);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand-stack {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.95;
+}
+
+.brand-logo-txt {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #ffffff;
+}
+
+.brand-sub-txt {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+}
+
+.welcome-nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  transition: color 0.2s ease;
+}
+
+.welcome-nav-link:hover {
+  color: #ffffff;
+}
+
+.welcome-section {
+  padding: 90px 0;
+  position: relative;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-number {
+  position: absolute;
+  top: 35px;
+  left: 35px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.22);
+  letter-spacing: 1px;
+}
+
+.hero-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  line-height: 1.15;
+}
+
+.hero-lead {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.section-heading {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  color: #ffffff;
+}
+
+/* Feature Cards */
+.feature-card, .portal-info-card, .portal-form-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s ease;
+}
+
+.feature-card:hover {
+  border-color: var(--border-hover);
+  background-color: var(--bg-card-hover);
+  transform: translateY(-3px);
+}
+
+.feature-index {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+}
+
+.feature-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.formula-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+/* Role Quick Select Button */
+.btn-role-select {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  color: #ffffff;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.btn-role-select:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(4px);
+}
+
+.role-badge {
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  padding: 4px 8px;
+}
+
+/* ========================================================
+   THEME BUTTONS & CONTROLS
+   ======================================================== */
+.btn-theme-white {
+  background-color: #ffffff;
+  color: #0b0c10;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  border: 1px solid #ffffff;
+  transition: all 0.2s ease;
+}
+
+.btn-theme-white:hover {
+  background-color: #e2e8f0;
+  color: #000000;
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25);
+}
+
+.btn-theme-ghost {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-theme-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Inputs & Form Controls */
+.theme-input, .form-control, .form-select {
+  background-color: #171a24 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 0.65rem 0.9rem !important;
+  font-size: 0.9rem !important;
+}
+
+.theme-input::placeholder, .form-control::placeholder {
+  color: #555b70 !important;
+}
+
+.theme-input:focus, .form-control:focus, .form-select:focus {
+  background-color: #191c28 !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06) !important;
+  color: #ffffff !important;
+}
+
+.form-select option {
+  background-color: #171a24;
+  color: #ffffff;
+}
+
+/* ========================================================
+   LOGGED-IN APPLICATION SHELL & DASHBOARD
+   ======================================================== */
+.navbar {
+  background-color: #0f1118 !important;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.75rem 1.5rem;
+}
+
+.navbar .brand {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #ffffff;
+}
+
+.navbar .nav-link {
+  color: var(--text-secondary) !important;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 0.45rem 0.85rem !important;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Cards across the application */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  transition: border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.stat {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+/* Tables in Dark Mode */
+.table {
+  color: #cbd5e1;
+  border-color: var(--border-subtle);
+  background-color: transparent;
+}
+
+.table thead th {
+  background-color: rgba(255, 255, 255, 0.02);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.9rem 0.75rem;
+}
+
+.table tbody tr {
+  background-color: transparent;
+  transition: background-color 0.15s ease;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.035);
+}
+
+.table tbody td {
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.85rem 0.75rem;
+  color: #e2e8f0;
+  vertical-align: middle;
+}
+
+/* Status Badges */
+.badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.badge.bg-secondary {
+  background-color: rgba(148, 163, 184, 0.15) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.badge.bg-info {
+  background-color: rgba(56, 189, 248, 0.15) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.badge.bg-warning {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+  color: #fbbf24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge.bg-success {
+  background-color: rgba(34, 197, 94, 0.15) !important;
+  color: #4ade80 !important;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.badge.bg-danger {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge.bg-primary {
+  background-color: rgba(99, 102, 241, 0.15) !important;
+  color: #a5b4fc !important;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.badge.bg-dark {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #f1f5f9 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Risk indicators */
+.risk-high {
+  color: var(--color-danger);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.risk-medium {
+  color: var(--color-warning);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.risk-low {
+  color: var(--color-success);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Alerts */
+.alert-warning {
+  background-color: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: #fde68a;
+}
+
+.alert-danger {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+}
+
+.alert-info {
+  background-color: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: #bae6fd;
+}
+
+/* Progress bar */
+.progress {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Link styles */
+a {
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+/* General button styling */
+.btn-primary {
+  background-color: #ffffff !important;
+  color: #0b0c10 !important;
+  font-weight: 700 !important;
+  border: none !important;
+  border-radius: 8px !important;
+}
+
+.btn-primary:hover {
+  background-color: #e2e8f0 !important;
+  color: #000000 !important;
+}
+
+.btn-success {
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+}
+
+.btn-dark {
+  background-color: #1e2230 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+.btn-outline-dark {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #cbd5e1 !important;
+}
+
+.btn-outline-dark:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+/* Recharts Dark Tooltip */
+.recharts-default-tooltip {
+  background-color: #181b26 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+}
