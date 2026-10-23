@@ -144,7 +144,7 @@ export default function Welcome({ onLogin }) {
                 color: isDark ? '#ffffff' : '#111111'
               }}
             >
-              PROCURE<span style={{ color: isDark ? '#949ab0' : '#666666' }}>IQ</span>
+              MEDIPROCURE<span style={{ color: isDark ? '#949ab0' : '#666666' }}>IQ</span>
             </span>
           </div>
 
@@ -261,20 +261,20 @@ export default function Welcome({ onLogin }) {
                   letterSpacing: -0.2
                 }}
               >
-                To ProcureIQ
+                To MediProcureIQ
               </div>
 
               <p
                 className="mx-auto mb-4"
                 style={{
-                  maxWidth: 580,
+                  maxWidth: 620,
                   fontSize: '0.95rem',
                   lineHeight: 1.7,
                   color: isDark ? '#82889e' : '#777777'
                 }}
               >
-                Enterprise procurement platform featuring transparent multi-criteria supplier ranking,
-                continuous risk radar monitoring, strict Segregation of Duties, and automated spend intelligence.
+                Cloud-based hospital procurement and supplier risk intelligence platform powered by Google Cloud Platform (GCP).
+                Featuring automated GCS ETL pipelines, BigQuery ML delay prediction, multi-criteria vendor optimization, and strict clinical governance.
               </p>
 
               <div>

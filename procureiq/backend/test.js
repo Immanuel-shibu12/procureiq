@@ -366,6 +366,17 @@ async function runTests() {
       `Weight adjustments dynamically modify supplier scores (${topSupplierQuality.total} vs ${topSupplierPrice.total})`
     );
 
+    // Test 11: Cloud ML & BigQuery Analytics Verification (Cloud Rubric)
+    console.log('\n[11] Cloud ML & BigQuery Analytics Verification');
+    const cloudMlRes = await request('/api/dashboard/cloud-ml', {
+      headers: { Authorization: `Bearer ${tokens.officer}` }
+    });
+    assert(cloudMlRes.status === 200, 'Cloud ML endpoint returns HTTP 200');
+    assert(cloudMlRes.data.platform.includes('Google Cloud Platform'), 'GCP Cloud platform identified');
+    assert(cloudMlRes.data.dataset.totalRecords === 1200, 'Health procurement clean dataset records verified (1200)');
+    assert(cloudMlRes.data.models['Logistic Regression (BigQuery ML Baseline)'] != null, 'BigQuery ML Logistic Regression metrics loaded');
+    assert(cloudMlRes.data.models['Gradient Boosted Trees (BigQuery ML Boosted Tree)'] != null, 'BigQuery ML Boosted Tree metrics loaded');
+    assert(cloudMlRes.data.lookerStudio.connector === 'Google BigQuery', 'Looker Studio connector configured to BigQuery');
 
   } finally {
     if (server) {

@@ -7,6 +7,7 @@ import { Requests, RequestDetail } from './pages/Requests';
 import { Suppliers, SupplierProfile } from './pages/Suppliers';
 import Engine from './pages/Engine';
 import Users from './pages/Users';
+import CloudAnalytics from './pages/CloudAnalytics';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -50,6 +51,7 @@ export default function App() {
     ['/requests', 'Requests'],
     ['/suppliers', 'Suppliers'],
     ['/engine', 'Fit & Risk Engine'],
+    ['/cloud-analytics', 'Cloud ML & Analytics'],
     ...(user.role === 'admin' ? [['/users', 'Users']] : [])
   ];
 
@@ -60,12 +62,12 @@ export default function App() {
         <div className="container-fluid px-0">
           <div className="d-flex align-items-center me-4">
             <span className="brand-stack">
-              <span className="brand-logo-txt" style={{ fontSize: '1.05rem' }}>PROCURE</span>
-              <span className="brand-sub-txt" style={{ fontSize: '0.65rem' }}>IQ</span>
+              <span className="brand-logo-txt" style={{ fontSize: '1.05rem' }}>MEDIPROCURE</span>
+              <span className="brand-sub-txt" style={{ fontSize: '0.65rem' }}>IQ &middot; GCP CLOUD</span>
             </span>
           </div>
 
-          <div className="navbar-nav me-auto d-flex gap-1">
+          <div className="navbar-nav me-auto d-flex gap-1 flex-wrap">
             {navLinks.map(([to, label]) => (
               <NavLink key={to} to={to} end className="nav-link">
                 {label}
@@ -95,6 +97,7 @@ export default function App() {
           <Route path="/suppliers" element={<Suppliers user={user} />} />
           <Route path="/suppliers/:id" element={<SupplierProfile />} />
           <Route path="/engine" element={<Engine />} />
+          <Route path="/cloud-analytics" element={<CloudAnalytics />} />
           <Route path="/users" element={user.role === 'admin' ? <Users /> : <Navigate to="/" />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

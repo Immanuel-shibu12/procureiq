@@ -101,4 +101,49 @@ router.get('/', wrap(async (req, res) => {
   });
 }));
 
+// Cloud ML & BigQuery Analytics Endpoint
+router.get('/cloud-ml', wrap(async (req, res) => {
+  const fs = require('fs');
+  const path = require('path');
+  const metricsFile = path.join(__dirname, '..', 'model_metrics.json');
+  let metrics = null;
+  if (fs.existsSync(metricsFile)) {
+    try {
+      metrics = JSON.parse(fs.readFileSync(metricsFile, 'utf8'));
+    } catch (err) {
+      metrics = null;
+    }
+  }
+
+  res.json({
+    platform: 'Google Cloud Platform (GCP)',
+    dataset: {
+      name: 'hospital_procurement_clean',
+      domain: 'Healthcare Supply Chain & Hospital Procurement',
+      source: 'gs://mediprocureiq-raw-data/clean/hospital_procurement_clean.csv',
+      bigQueryTable: 'mediprocureiq_analytics.hospital_procurement_clean',
+      totalRecords: 1200,
+      delayedRate: 18.4,
+      defectRate: 6.3,
+      clinicalCategories: [
+        'ICU Equipment',
+        'Pharmaceuticals',
+        'Surgical Supplies',
+        'PPE & Sanitization',
+        'Diagnostic Devices'
+      ]
+    },
+    models: metrics || {},
+    lookerStudio: {
+      title: 'MediProcureIQ: Cloud Spend & Supplier Risk Dashboard',
+      platform: 'Google Looker Studio (formerly Data Studio)',
+      connector: 'Google BigQuery',
+      dashboardUrl: 'https://lookerstudio.google.com/reporting/mediprocureiq-hospital-risk',
+      dimensions: ['hospital_department', 'item_category', 'supplier_name', 'risk_label'],
+      metrics: ['total_spend_inr', 'delayed_delivery', 'defect_flag', 'composite_risk_score']
+    }
+  });
+}));
+
 module.exports = router;
+

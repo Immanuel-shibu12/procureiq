@@ -1,5 +1,15 @@
-// Transparent rule-based Supplier Fit Score + Risk Radar (no machine learning).
-const CATEGORIES = ['IT Equipment', 'Office Supplies', 'Furniture', 'Stationery'];
+// Transparent rule-based Supplier Fit Score + Risk Radar.
+const CATEGORIES = [
+  'ICU Equipment',
+  'Pharmaceuticals',
+  'Surgical Supplies',
+  'PPE & Sanitization',
+  'Diagnostic Devices',
+  'IT Equipment',
+  'Office Supplies',
+  'Furniture',
+  'Stationery'
+];
 const DEFAULT_WEIGHTS = { price: 35, delivery: 30, quality: 25, compliance: 10 };
 const REQUIRED_DOCS = ['Tax Certificate', 'Business License', 'Insurance'];
 const r1 = n => Math.round(n * 10) / 10;

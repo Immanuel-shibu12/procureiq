@@ -1,0 +1,91 @@
+{
+  "Logistic Regression (BigQuery ML Baseline)": {
+    "accuracy": 0.7667,
+    "precision": 0.4189,
+    "recall": 0.7045,
+    "f1_score": 0.5254,
+    "roc_auc": 0.7806,
+    "confusion_matrix": {
+      "true_negative": 153,
+      "false_positive": 43,
+      "false_negative": 13,
+      "true_positive": 31
+    }
+  },
+  "Random Forest Classifier": {
+    "accuracy": 0.7875,
+    "precision": 0.4426,
+    "recall": 0.6136,
+    "f1_score": 0.5143,
+    "roc_auc": 0.7481,
+    "confusion_matrix": {
+      "true_negative": 162,
+      "false_positive": 34,
+      "false_negative": 17,
+      "true_positive": 27
+    }
+  },
+  "Gradient Boosted Trees (BigQuery ML Boosted Tree)": {
+    "accuracy": 0.8167,
+    "precision": 0.5,
+    "recall": 0.3864,
+    "f1_score": 0.4359,
+    "roc_auc": 0.6963,
+    "confusion_matrix": {
+      "true_negative": 179,
+      "false_positive": 17,
+      "false_negative": 27,
+      "true_positive": 17
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "supplier_rating",
+      "importance_weight": 0.3825
+    },
+    {
+      "feature": "historical_ontime_pct",
+      "importance_weight": 0.2576
+    },
+    {
+      "feature": "unit_price_inr",
+      "importance_weight": 0.2172
+    },
+    {
+      "feature": "promised_lead_days",
+      "importance_weight": 0.0475
+    },
+    {
+      "feature": "order_quantity",
+      "importance_weight": 0.0355
+    },
+    {
+      "feature": "sterility_certified",
+      "importance_weight": 0.0173
+    },
+    {
+      "feature": "item_category_PPE & Sanitization",
+      "importance_weight": 0.0137
+    },
+    {
+      "feature": "clinical_criticality",
+      "importance_weight": 0.0082
+    },
+    {
+      "feature": "item_category_Pharmaceuticals",
+      "importance_weight": 0.0078
+    },
+    {
+      "feature": "item_category_ICU Equipment",
+      "importance_weight": 0.0055
+    },
+    {
+      "feature": "item_category_Surgical Supplies",
+      "importance_weight": 0.0052
+    },
+    {
+      "feature": "cold_chain_required",
+      "importance_weight": 0.002
+    }
+  ]
+}

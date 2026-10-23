@@ -31,7 +31,13 @@ async function doSeed() {
     S('Orbit Supplies', ['IT Equipment', 'Office Supplies'], [{ category: 'IT Equipment', price: 49500 }, { category: 'Office Supplies', price: 260 }], 4.0, 88, 1, ['valid', 'valid', 'missing']),
     S('Zenith Furnishings', ['Furniture'], [{ category: 'Furniture', price: 8200 }], 2.6, 70, 5, ['expired', 'valid', 'missing'], 'suspended'),
     S('PaperPlus', ['Office Supplies', 'Stationery'], [{ category: 'Stationery', price: 40 }], null, null, 0, ['valid', 'valid', 'valid']), // no performance data
-    S('Oldline Corp', ['Furniture'], [], 3.9, 90, 0, ['valid', 'valid', 'valid'], 'inactive')]);
+    S('Oldline Corp', ['Furniture'], [], 3.9, 90, 0, ['valid', 'valid', 'valid'], 'inactive'),
+    // Health & Hospital Domain Suppliers (MediProcureIQ)
+    S('BioMed Diagnostics', ['Diagnostic Devices', 'PPE & Sanitization'], [{ category: 'Diagnostic Devices', price: 145000 }, { category: 'PPE & Sanitization', price: 450 }], 4.8, 97, 0, ['valid', 'valid', 'valid']),
+    S('Apex Pharma Care', ['Pharmaceuticals'], [{ category: 'Pharmaceuticals', price: 850 }], 4.6, 94, 1, ['valid', 'valid', 'valid']),
+    S('MedTech ICU Systems', ['ICU Equipment'], [{ category: 'ICU Equipment', price: 320000 }], 4.7, 95, 0, ['valid', 'valid', 'valid']),
+    S('SurgiClean Instruments', ['Surgical Supplies', 'PPE & Sanitization'], [{ category: 'Surgical Supplies', price: 12500 }, { category: 'PPE & Sanitization', price: 420 }], 3.8, 82, 3, ['valid', 'valid', 'expired'], 'under_review')
+  ]);
   const mk = (i, c, q, p, status, m, sIdx) => {
     const at = m != null ? new Date(2026, m, 5) : new Date();
     const r = {
@@ -40,10 +46,10 @@ async function doSeed() {
       quantity: q,
       unitPrice: p,
       requiredDate: new Date(Date.now() + 864e6 / 10),
-      justification: 'Sample request for demonstration use.',
+      justification: 'Hospital operational procurement requisition for patient care.',
       requester: req._id,
       status,
-      history: [{ status, byName: 'Seed', note: 'Sample data', at }]
+      history: [{ status, byName: 'Seed', note: 'Hospital demonstration data', at }]
     };
     if (sIdx != null) {
       r.order = {
@@ -55,9 +61,20 @@ async function doSeed() {
     }
     return r;
   };
-  for (const r of [mk('Laptops', 'IT Equipment', 10, 52000, 'delivered', 5, 0), mk('Printers', 'IT Equipment', 4, 25000, 'ordered', 7, 2),
-    mk('Notebooks', 'Stationery', 500, 40, 'delivered', 8, 4), mk('Monitors', 'IT Equipment', 8, 12000, 'under_review'),
-    mk('Desks', 'Furniture', 6, 8200, 'rejected'), mk('Chairs', 'Furniture', 12, 4500, 'submitted'), mk('Pens', 'Office Supplies', 200, 12, 'draft')]) await Request.create(r);
+  for (const r of [
+    mk('Laptops', 'IT Equipment', 10, 52000, 'delivered', 5, 0),
+    mk('Printers', 'IT Equipment', 4, 25000, 'ordered', 7, 2),
+    mk('Notebooks', 'Stationery', 500, 40, 'delivered', 8, 4),
+    mk('Monitors', 'IT Equipment', 8, 12000, 'under_review'),
+    mk('Desks', 'Furniture', 6, 8200, 'rejected'),
+    mk('Chairs', 'Furniture', 12, 4500, 'submitted'),
+    mk('Pens', 'Office Supplies', 200, 12, 'draft'),
+    // Health domain requisitions
+    mk('ICU Ventilators', 'ICU Equipment', 2, 320000, 'approved'),
+    mk('Sterile Surgical Suture Kits', 'Surgical Supplies', 25, 12500, 'ordered', 6, 9),
+    mk('N95 Hospital PPE Consumables', 'PPE & Sanitization', 1000, 420, 'delivered', 8, 6),
+    mk('Digital Patient Monitors', 'Diagnostic Devices', 5, 145000, 'submitted')
+  ]) await Request.create(r);
   console.log('Seeded. Login password for all demo users: Password@123');
 }
 
