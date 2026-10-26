@@ -8,6 +8,7 @@ import { Suppliers, SupplierProfile } from './pages/Suppliers';
 import Engine from './pages/Engine';
 import Users from './pages/Users';
 import CloudAnalytics from './pages/CloudAnalytics';
+import Chatbot from './components/Chatbot';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -116,6 +117,9 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>
+
+      {/* Floating AI Assistant Chatbot */}
+      <Chatbot user={user} />
 
       {/* Minimalist Footer */}
       <footer className="py-3 px-4 border-top border-secondary-subtle text-muted small text-center" style={{ borderColor: 'var(--border-subtle)' }}>

@@ -9,6 +9,7 @@ app.use('/api/suppliers', require('./routes/suppliers'));
 app.use('/api/requests', require('./routes/requests'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/engine', require('./routes/engine'));
+app.use('/api/chat', require('./routes/chat'));
 // Health check: reports actual MongoDB connection state
 app.get('/api/health', (req, res) => {
   const dbState = mongoose.connection.readyState; // 0=disconnected,1=connected,2=connecting,3=disconnecting

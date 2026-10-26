@@ -378,6 +378,35 @@ async function runTests() {
     assert(cloudMlRes.data.models['Gradient Boosted Trees (BigQuery ML Boosted Tree)'] != null, 'BigQuery ML Boosted Tree metrics loaded');
     assert(cloudMlRes.data.lookerStudio.connector === 'Google BigQuery', 'Looker Studio connector configured to BigQuery');
 
+    // Test 12: MediProcure AI Chatbot Verification
+    console.log('\n[12] MediProcure AI Chatbot & Gemini API Verification');
+    const chatStatus = await request('/api/chat/status');
+    assert(chatStatus.status === 200, 'Chat status endpoint returns HTTP 200');
+    assert(chatStatus.data.provider === 'Google Gemini', 'Chat provider is Google Gemini');
+
+    const unauthChat = await request('/api/chat', {
+      method: 'POST',
+      body: { message: 'Show pending requisitions' }
+    });
+    assert(unauthChat.status === 401, 'Unauthenticated chat request is blocked (HTTP 401)');
+
+    const authChat = await request('/api/chat', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${tokens.officer}` },
+      body: { message: 'Show pending requisition status' }
+    });
+    assert(authChat.status === 200, 'Authenticated chat request succeeds (HTTP 200)');
+    assert(typeof authChat.data.reply === 'string' && authChat.data.reply.length > 20, 'Chat response contains comprehensive reply text');
+    assert(authChat.data.reply.includes('Requisition Status Breakdown'), 'Chat reply is grounded on live requisition data');
+
+    const riskChat = await request('/api/chat', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${tokens.officer}` },
+      body: { message: 'Which suppliers have high delivery risk?' }
+    });
+    assert(riskChat.status === 200, 'Supplier risk chat query succeeds (HTTP 200)');
+    assert(riskChat.data.reply.includes('Supplier') || riskChat.data.reply.includes('Risk'), 'Chat reply addresses supplier risk and reliability');
+
   } finally {
     if (server) {
       server.close();
