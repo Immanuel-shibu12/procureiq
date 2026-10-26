@@ -1,4 +1,27 @@
-{"name":"procureiq-frontend","private":true,"version":"1.0.0","type":"module",
-"scripts":{"dev":"vite","build":"vite build"},
-"dependencies":{"bootstrap":"^5.3.3","react":"^18.3.1","react-dom":"^18.3.1","react-router-dom":"^6.23.1","recharts":"^2.12.7"},
-"devDependencies":{"@vitejs/plugin-react":"^4.3.1","vite":"^5.3.1"}}
+{
+  "name": "procureiq-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "mobile:sync": "vite build && cap sync android",
+    "mobile:open": "cap open android",
+    "mobile:run": "cap run android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "bootstrap": "^5.3.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.23.1",
+    "recharts": "^2.12.7"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.3.1"
+  }
+}
