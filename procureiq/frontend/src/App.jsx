@@ -14,6 +14,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [ready, setReady] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem('mediprocure_theme') || 'dark');
+  const [chatOpen, setChatOpen] = useState(false);
   const nav = useNavigate();
 
   useEffect(() => {
@@ -85,6 +86,20 @@ export default function App() {
           </div>
 
           <div className="d-flex align-items-center gap-2">
+            {/* AI Assistant Sidebar Toggle Button */}
+            <button
+              className={`btn btn-sm d-flex align-items-center gap-2 px-3 py-1 rounded-pill ${chatOpen ? 'btn-warning text-dark fw-bold' : 'btn-outline-warning'}`}
+              onClick={() => setChatOpen(!chatOpen)}
+              title="Toggle MediProcure AI Assistant Sidebar"
+              style={{ fontSize: '0.82rem' }}
+            >
+              <span>🤖</span>
+              <span className="d-none d-md-inline">MediProcure AI</span>
+              <span className="badge bg-warning-subtle text-warning border border-warning-subtle py-0 px-1" style={{ fontSize: '0.62rem' }}>
+                GCP
+              </span>
+            </button>
+
             <button
               className="btn btn-outline-light btn-sm px-2 py-1"
               onClick={toggleTheme}
@@ -104,7 +119,7 @@ export default function App() {
       </nav>
 
       {/* Main Content Body */}
-      <main className="container py-4 flex-grow-1">
+      <main className={`container py-4 flex-grow-1 ${chatOpen ? 'main-with-sidebar' : ''}`}>
         <Routes>
           <Route path="/" element={<Dashboard user={user} theme={theme} />} />
           <Route path="/requests" element={<Requests user={user} />} />
@@ -118,8 +133,8 @@ export default function App() {
         </Routes>
       </main>
 
-      {/* Floating AI Assistant Chatbot */}
-      <Chatbot user={user} />
+      {/* MediProcure AI Side Panel */}
+      <Chatbot user={user} isOpen={chatOpen} setIsOpen={setChatOpen} />
 
       {/* Minimalist Footer */}
       <footer className="py-3 px-4 border-top border-secondary-subtle text-muted small text-center" style={{ borderColor: 'var(--border-subtle)' }}>
