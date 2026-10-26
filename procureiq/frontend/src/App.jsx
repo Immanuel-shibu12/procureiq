@@ -12,7 +12,15 @@ import CloudAnalytics from './pages/CloudAnalytics';
 export default function App() {
   const [user, setUser] = useState(null);
   const [ready, setReady] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('mediprocure_theme') || 'dark');
   const nav = useNavigate();
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('mediprocure_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => (t === 'dark' ? 'light' : 'dark'));
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -56,7 +64,7 @@ export default function App() {
   ];
 
   return (
-    <div className="app-shell min-vh-100 d-flex flex-column">
+    <div className="app-shell min-vh-100 d-flex flex-column" data-theme={theme}>
       {/* Top Navbar */}
       <nav className="navbar navbar-expand px-4 py-3 sticky-top">
         <div className="container-fluid px-0">
@@ -75,12 +83,18 @@ export default function App() {
             ))}
           </div>
 
-          <div className="d-flex align-items-center gap-3">
-            <div className="d-flex align-items-center gap-2">
-              <span className="badge role-badge py-2 px-3">
-                {user.name} &middot; <span className="text-uppercase">{user.role}</span>
-              </span>
-            </div>
+          <div className="d-flex align-items-center gap-2">
+            <button
+              className="btn btn-outline-light btn-sm px-2 py-1"
+              onClick={toggleTheme}
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+              aria-label={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+            <span className="badge role-badge py-2 px-3">
+              {user.name} &middot; <span className="text-uppercase">{user.role}</span>
+            </span>
             <button className="btn btn-outline-light btn-sm px-3" onClick={logout}>
               Sign Out
             </button>
@@ -91,7 +105,7 @@ export default function App() {
       {/* Main Content Body */}
       <main className="container py-4 flex-grow-1">
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<Dashboard user={user} theme={theme} />} />
           <Route path="/requests" element={<Requests user={user} />} />
           <Route path="/requests/:id" element={<RequestDetail user={user} />} />
           <Route path="/suppliers" element={<Suppliers user={user} />} />
