@@ -830,3 +830,204 @@ a:hover {
 .timeline-dot.under_review {
   background-color: var(--color-warn);
 }
+
+/* ========================================================
+   EXPERIENCE AT THE EDGE (Pinterest Pin Style: #100400 & Orange Glow)
+   ======================================================== */
+
+@keyframes edgeAuraPulse1 {
+  0% { transform: translate(-20px, -20px) scale(0.9); opacity: 0.45; }
+  50% { transform: translate(30px, 20px) scale(1.15); opacity: 0.75; }
+  100% { transform: translate(-20px, -20px) scale(0.9); opacity: 0.45; }
+}
+
+@keyframes edgeAuraPulse2 {
+  0% { transform: translate(25px, 25px) scale(1.1); opacity: 0.4; }
+  50% { transform: translate(-20px, -15px) scale(0.9); opacity: 0.7; }
+  100% { transform: translate(25px, 25px) scale(1.1); opacity: 0.4; }
+}
+
+@keyframes laserBorderCycle {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes textShimmerOrange {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes dotPulseLive {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 109, 0, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(255, 109, 0, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 109, 0, 0); }
+}
+
+@keyframes lightSweepBtn {
+  0% { transform: translateX(-150%) rotate(30deg); }
+  100% { transform: translateX(250%) rotate(30deg); }
+}
+
+@keyframes waveOscillate {
+  0% { transform: translateY(0px) scaleY(1); }
+  50% { transform: translateY(-8px) scaleY(1.04); }
+  100% { transform: translateY(0px) scaleY(1); }
+}
+
+.welcome-edge-root {
+  background: radial-gradient(circle at 50% 20%, #1c0802 0%, #100400 55%, #080200 100%) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.edge-canvas-wrapper {
+  position: relative;
+  border-radius: 20px;
+  background: rgba(18, 7, 3, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 109, 0, 0.35);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.9), 0 0 60px rgba(255, 87, 34, 0.15), inset 0 0 40px rgba(255, 109, 0, 0.04);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.edge-canvas-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 21px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 109, 0, 0.6) 0%, rgba(255, 87, 34, 0.1) 40%, rgba(255, 152, 0, 0.5) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.edge-badge {
+  background: rgba(255, 87, 34, 0.12);
+  border: 1px solid rgba(255, 109, 0, 0.35);
+  box-shadow: 0 0 15px rgba(255, 87, 34, 0.2);
+  color: #ffb74d;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.edge-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ff6d00;
+  box-shadow: 0 0 10px #ff6d00;
+  animation: dotPulseLive 2s infinite;
+}
+
+.edge-title-gradient {
+  background: linear-gradient(135deg, #ffffff 30%, #ffa726 65%, #ff5722 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmerOrange 8s ease infinite;
+}
+
+.edge-subtitle-text {
+  color: #d1b5a5;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+.edge-body-text {
+  color: #9e8578;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.btn-edge-primary {
+  position: relative;
+  background: linear-gradient(135deg, #ff5722 0%, #ff6d00 50%, #ff3d00 100%);
+  color: #ffffff !important;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  padding: 14px 44px;
+  border-radius: 9999px;
+  border: none;
+  box-shadow: 0 0 30px rgba(255, 87, 34, 0.55), 0 10px 25px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.btn-edge-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 50px rgba(255, 109, 0, 0.85), 0 14px 30px rgba(0, 0, 0, 0.7);
+  color: #ffffff !important;
+}
+
+.btn-edge-primary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: rotate(30deg);
+  animation: lightSweepBtn 3.5s infinite;
+}
+
+.edge-feature-pill {
+  background: rgba(255, 87, 34, 0.08);
+  border: 1px solid rgba(255, 109, 0, 0.22);
+  border-radius: 8px;
+  color: #ffccbc;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.edge-feature-pill:hover {
+  background: rgba(255, 87, 34, 0.16);
+  border-color: rgba(255, 109, 0, 0.45);
+  box-shadow: 0 0 15px rgba(255, 87, 34, 0.25);
+  transform: translateY(-1px);
+}
+
+.role-card-edge {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 109, 0, 0.15);
+  border-radius: 12px;
+  color: #ffffff;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+}
+
+.role-card-edge:hover {
+  background: rgba(255, 87, 34, 0.08);
+  border-color: rgba(255, 109, 0, 0.5);
+  box-shadow: 0 0 20px rgba(255, 87, 34, 0.2);
+  transform: translateX(4px);
+}
+
+.input-edge {
+  background-color: rgba(26, 11, 4, 0.8) !important;
+  border: 1px solid rgba(255, 109, 0, 0.25) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+}
+
+.input-edge:focus {
+  border-color: #ff6d00 !important;
+  box-shadow: 0 0 0 3px rgba(255, 109, 0, 0.25) !important;
+}
+

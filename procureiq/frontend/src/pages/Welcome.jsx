@@ -1,13 +1,66 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../api';
 
 export default function Welcome({ onLogin }) {
-  const [view, setView] = useState('welcome'); // 'welcome' | 'login' | 'services' | 'about' | 'contact'
-  const [themeMode, setThemeMode] = useState('dark'); // 'dark' (existing theme colour) | 'light' (reference mockup colour)
+  const [activeTab, setActiveTab] = useState('simulator'); // 'simulator' | 'quick_login' | 'credentials' | 'architecture'
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+  const [modalOpen, setModalOpen] = useState(false); // Quick full-screen login modal
+
+  // Interactive Live AI Simulator State
+  const [simRating, setSimRating] = useState(3.8);
+  const [simOnTime, setSimOnTime] = useState(82);
+  const [simCategory, setSimCategory] = useState('ICU Equipment');
+  const [simColdChain, setSimColdChain] = useState(false);
+  const [simResult, setSimResult] = useState(null);
+
+  // Authentication State
   const [f, setF] = useState({ email: '', password: '', name: '' });
   const [reg, setReg] = useState(false);
   const [err, setErr] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Mouse tracker for interactive spotlight
+  const handleMouseMove = e => {
+    const { clientX, clientY } = e;
+    const x = (clientX / window.innerWidth) * 100;
+    const y = (clientY / window.innerHeight) * 100;
+    setMousePos({ x, y });
+  };
+
+  // Run initial simulator calculation
+  useEffect(() => {
+    runSimulation();
+  }, [simRating, simOnTime, simCategory, simColdChain]);
+
+  const runSimulation = () => {
+    const ratingScore = (5.0 - simRating) * 18.5;
+    const onTimeScore = (100.0 - simOnTime) * 0.6;
+    const coldPenalty = simColdChain ? 15.0 : 0;
+    const rawProb = Math.min(95, Math.max(5, Math.round(ratingScore + onTimeScore + coldPenalty)));
+    const defectProb = Math.min(60, Math.max(2, Math.round((5.0 - simRating) * 9.5 + (simColdChain ? 6 : 0))));
+
+    let tier = 'Low Risk';
+    let badgeClass = 'text-success border-success';
+    let recommendation = 'Optimal procurement terms. Fast-track PO approval.';
+
+    if (rawProb >= 48 || defectProb >= 25) {
+      tier = 'High Clinical Risk';
+      badgeClass = 'text-danger border-danger';
+      recommendation = 'Critical delivery bottleneck detected. Mandatory secondary vendor backup.';
+    } else if (rawProb >= 22 || defectProb >= 10) {
+      tier = 'Moderate Risk';
+      badgeClass = 'text-warning border-warning';
+      recommendation = 'Proceed with milestone delivery tracking & goods inspection.';
+    }
+
+    setSimResult({
+      delayProb: rawProb,
+      defectProb,
+      tier,
+      badgeClass,
+      recommendation
+    });
+  };
 
   const submit = async e => {
     e.preventDefault();
@@ -41,570 +94,760 @@ export default function Welcome({ onLogin }) {
     }
   };
 
-  // Generate ribbon wave paths matching the reference image's flowing guilloche waves
-  const wavePaths = Array.from({ length: 18 }, (_, i) => {
-    const yOffset = i * 7.5;
-    const c1y = 350 + i * 5.5;
-    const c2y = 540 - i * 4.5;
-    const c3y = 380 + i * 6.5;
-    const c4y = 480 - i * 5.2;
-    return `M -60 ${420 + yOffset} C 210 ${c1y} 390 ${c2y} 570 ${430 + yOffset} C 770 ${c3y} 890 ${c4y} 1060 ${440 + yOffset}`;
+  // Flowing ribbon wave paths
+  const wavePaths = Array.from({ length: 22 }, (_, i) => {
+    const yOffset = i * 9.5;
+    const c1y = 310 + i * 7.5;
+    const c2y = 580 - i * 6.5;
+    const c3y = 340 + i * 8.5;
+    const c4y = 510 - i * 7.2;
+    return `M -100 ${390 + yOffset} C 220 ${c1y} 410 ${c2y} 620 ${400 + yOffset} C 840 ${c3y} 980 ${c4y} 1220 ${410 + yOffset}`;
   });
 
-  const leftCircles = [55, 85, 115, 145, 175, 205, 235, 265];
-  const rightCircles = [55, 85, 115, 145, 175, 205, 235, 265];
-
-  const isDark = themeMode === 'dark';
+  const orbitalCircles = [40, 75, 115, 160, 210, 265, 325];
 
   return (
     <div
-      className={`welcome-page-wrapper d-flex align-items-center justify-content-center min-vh-100 p-2 p-md-4 ${
-        isDark ? 'theme-carbon-dark' : 'theme-paper-light'
-      }`}
+      className="welcome-edge-root min-vh-100 text-white position-relative d-flex flex-column justify-content-between overflow-hidden"
+      onMouseMove={handleMouseMove}
       style={{
-        backgroundColor: isDark ? '#08090d' : '#e6e6e6',
-        transition: 'background-color 0.3s ease'
+        background: 'radial-gradient(circle at 50% 15%, #180601 0%, #100400 45%, #070200 100%)',
+        fontFamily: "'Plus Jakarta Sans', sans-serif"
       }}
     >
-      {/* Central Screen Canvas (Faithful to Reference Mockup Frame) */}
+      {/* ========================================================
+          BACKGROUND GLOWING AURORAS & INTERACTIVE SPOTLIGHT
+          ======================================================== */}
+      {/* Top Center Radiant Sun Nebula */}
       <div
-        className="welcome-card-canvas position-relative d-flex flex-column justify-content-between overflow-hidden shadow-lg"
+        className="position-absolute pointer-events-none"
         style={{
-          width: '100%',
-          maxWidth: 1140,
-          minHeight: 640,
-          borderRadius: 16,
-          backgroundColor: isDark ? '#12141c' : '#f5f5f5',
-          border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid #dfdfdf',
-          color: isDark ? '#ffffff' : '#222222',
-          transition: 'all 0.3s ease'
+          top: '-20%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '900px',
+          height: '750px',
+          background: 'radial-gradient(ellipse at center, rgba(255, 87, 34, 0.35) 0%, rgba(255, 109, 0, 0.12) 45%, transparent 70%)',
+          borderRadius: '50%',
+          filter: 'blur(75px)',
+          animation: 'edgeAuraPulse1 12s ease-in-out infinite alternate',
+          zIndex: 1
         }}
+      />
+
+      {/* Bottom Right Amber Glow Nebula */}
+      <div
+        className="position-absolute pointer-events-none"
+        style={{
+          bottom: '-25%',
+          right: '-10%',
+          width: '800px',
+          height: '800px',
+          background: 'radial-gradient(circle, rgba(255, 152, 0, 0.25) 0%, rgba(255, 61, 0, 0.08) 55%, transparent 70%)',
+          borderRadius: '50%',
+          filter: 'blur(80px)',
+          animation: 'edgeAuraPulse2 16s ease-in-out infinite alternate',
+          zIndex: 1
+        }}
+      />
+
+      {/* Interactive Cursor Spotlight Follower */}
+      <div
+        className="position-absolute pointer-events-none"
+        style={{
+          top: `${mousePos.y}%`,
+          left: `${mousePos.x}%`,
+          transform: 'translate(-50%, -50%)',
+          width: '560px',
+          height: '560px',
+          background: 'radial-gradient(circle, rgba(255, 109, 0, 0.16) 0%, rgba(255, 87, 34, 0.05) 50%, transparent 70%)',
+          borderRadius: '50%',
+          filter: 'blur(50px)',
+          transition: 'top 0.12s ease-out, left 0.12s ease-out',
+          zIndex: 2
+        }}
+      />
+
+      {/* Background SVG Wave Ribbons & Laser Orbits */}
+      <svg
+        className="position-absolute top-0 start-0 w-100 h-100 pe-none"
+        viewBox="0 0 1100 650"
+        preserveAspectRatio="none"
+        style={{ opacity: 0.7, zIndex: 2 }}
       >
-        {/* Decorative Geometric Wireframe Wave Lines & Concentric Rings (From Reference Image) */}
-        <svg
-          className="position-absolute top-0 start-0 w-100 h-100 pe-none"
-          viewBox="0 0 1000 600"
-          preserveAspectRatio="none"
-          style={{ opacity: isDark ? 0.35 : 0.45, zIndex: 1 }}
-        >
-          {/* Left concentric circles */}
-          <g
-            stroke={isDark ? '#ffffff' : '#333333'}
-            strokeWidth="0.85"
-            fill="none"
-            opacity={isDark ? '0.3' : '0.4'}
-          >
-            {leftCircles.map((r, idx) => (
-              <circle key={`lc-${idx}`} cx="180" cy="460" r={r} />
-            ))}
-          </g>
+        <defs>
+          <linearGradient id="edgeFireLaser" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#ff3d00" stopOpacity="0.85" />
+            <stop offset="50%" stopColor="#ff9100" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#ffb74d" stopOpacity="0.12" />
+          </linearGradient>
+          <linearGradient id="edgeRingLaser" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#ff6d00" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#ffa000" stopOpacity="0.08" />
+          </linearGradient>
+        </defs>
 
-          {/* Right concentric circles */}
-          <g
-            stroke={isDark ? '#ffffff' : '#333333'}
-            strokeWidth="0.85"
-            fill="none"
-            opacity={isDark ? '0.3' : '0.4'}
-          >
-            {rightCircles.map((r, idx) => (
-              <circle key={`rc-${idx}`} cx="820" cy="460" r={r} />
-            ))}
-          </g>
+        {/* Concentric Orbital Rings */}
+        <g stroke="url(#edgeRingLaser)" strokeWidth="0.85" fill="none">
+          {orbitalCircles.map((r, idx) => (
+            <circle key={`ring-${idx}`} cx="160" cy="480" r={r} />
+          ))}
+          {orbitalCircles.map((r, idx) => (
+            <circle key={`ring2-${idx}`} cx="940" cy="480" r={r} />
+          ))}
+        </g>
 
-          {/* Flowing ribbon waves */}
-          <g
-            stroke={isDark ? '#ffffff' : '#444444'}
-            strokeWidth="0.75"
-            fill="none"
-            opacity={isDark ? '0.4' : '0.55'}
-          >
-            {wavePaths.map((d, idx) => (
-              <path key={`wave-${idx}`} d={d} />
-            ))}
-          </g>
-        </svg>
+        {/* Fiery Flowing Waves */}
+        <g stroke="url(#edgeFireLaser)" strokeWidth="0.95" fill="none">
+          {wavePaths.map((d, idx) => (
+            <path key={`wave-${idx}`} d={d} />
+          ))}
+        </g>
+      </svg>
 
-        {/* Top Navigation Bar */}
-        <header
-          className="d-flex justify-content-between align-items-center px-4 px-md-5 py-4 position-relative"
-          style={{ zIndex: 10 }}
-        >
-          {/* Logo / Brand */}
+      {/* ========================================================
+          TOP NAVIGATION BAR (Glassmorphism & Neon Brand)
+          ======================================================== */}
+      <header
+        className="d-flex justify-content-between align-items-center px-4 px-lg-5 py-4 position-relative"
+        style={{ zIndex: 20 }}
+      >
+        {/* Brand */}
+        <div className="d-flex align-items-center gap-2">
           <div
-            className="d-flex align-items-center gap-2 cursor-pointer"
-            onClick={() => setView('welcome')}
-            style={{ cursor: 'pointer' }}
+            className="d-flex align-items-center justify-content-center rounded-3"
+            style={{
+              width: 38,
+              height: 38,
+              background: 'linear-gradient(135deg, #ff3d00 0%, #ff8f00 100%)',
+              boxShadow: '0 0 20px rgba(255, 87, 34, 0.7)'
+            }}
           >
-            <span
+            <span style={{ fontSize: '18px', fontWeight: 900 }}>⚡</span>
+          </div>
+          <div>
+            <div
               className="fw-bold tracking-wider text-uppercase"
               style={{
-                fontFamily: 'Space Grotesk, sans-serif',
+                fontFamily: "'Space Grotesk', sans-serif",
                 fontSize: '1.25rem',
-                letterSpacing: 2,
-                color: isDark ? '#ffffff' : '#111111'
+                letterSpacing: '2px',
+                lineHeight: 1
               }}
             >
-              MEDIPROCURE<span style={{ color: isDark ? '#949ab0' : '#666666' }}>IQ</span>
-            </span>
-          </div>
-
-          {/* Navigation Links */}
-          <nav className="d-flex align-items-center gap-3 gap-md-4">
-            <button
-              className={`btn btn-link p-0 text-decoration-none text-uppercase fw-semibold ${
-                view === 'welcome' ? 'active-link' : ''
-              }`}
-              style={{
-                fontSize: '0.8rem',
-                letterSpacing: 1.5,
-                color: isDark ? (view === 'welcome' ? '#ffffff' : '#888ea8') : view === 'welcome' ? '#000000' : '#666666'
-              }}
-              onClick={() => setView('welcome')}
-            >
-              HOME
-            </button>
-
-            <button
-              className="btn btn-link p-0 text-decoration-none text-uppercase fw-semibold"
-              style={{
-                fontSize: '0.8rem',
-                letterSpacing: 1.5,
-                color: isDark ? '#888ea8' : '#666666'
-              }}
-              onClick={() => setView('services')}
-            >
-              SERVICES
-            </button>
-
-            <button
-              className="btn btn-link p-0 text-decoration-none text-uppercase fw-semibold"
-              style={{
-                fontSize: '0.8rem',
-                letterSpacing: 1.5,
-                color: isDark ? '#888ea8' : '#666666'
-              }}
-              onClick={() => setView('about')}
-            >
-              ABOUT
-            </button>
-
-            <button
-              className="btn btn-link p-0 text-decoration-none text-uppercase fw-semibold"
-              style={{
-                fontSize: '0.8rem',
-                letterSpacing: 1.5,
-                color: isDark ? '#888ea8' : '#666666'
-              }}
-              onClick={() => setView('contact')}
-            >
-              CONTACT
-            </button>
-
-            {/* Mode Switcher (Dark / Light) */}
-            <button
-              className="btn btn-sm px-2 py-1 text-uppercase"
-              title={`Switch to ${isDark ? 'Light' : 'Dark'} theme`}
-              style={{
-                fontSize: '0.68rem',
-                letterSpacing: 1,
-                border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #ccc',
-                color: isDark ? '#ffffff' : '#333333',
-                backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
-                borderRadius: 20
-              }}
-              onClick={() => setThemeMode(isDark ? 'light' : 'dark')}
-            >
-              {isDark ? '☀ Light' : '☾ Dark'}
-            </button>
-
-            {/* Distinct Login Action */}
-            <button
-              className={`btn btn-sm px-3 py-1 text-uppercase fw-bold rounded-pill ${
-                view === 'login' ? 'btn-primary' : 'btn-outline-secondary'
-              }`}
-              style={{
-                fontSize: '0.78rem',
-                letterSpacing: 1.5,
-                backgroundColor: isDark ? (view === 'login' ? '#ffffff' : 'transparent') : view === 'login' ? '#111111' : 'transparent',
-                color: isDark ? (view === 'login' ? '#0b0c10' : '#ffffff') : view === 'login' ? '#ffffff' : '#111111',
-                borderColor: isDark ? '#ffffff' : '#111111'
-              }}
-              onClick={() => setView(view === 'login' ? 'welcome' : 'login')}
-            >
-              {view === 'login' ? 'Close' : 'LOG IN'}
-            </button>
-          </nav>
-        </header>
-
-        {/* Center Main Stage */}
-        <div
-          className="position-relative d-flex flex-column align-items-center justify-content-center text-center px-4 my-auto py-5"
-          style={{ zIndex: 10, minHeight: 440 }}
-        >
-          {view === 'welcome' && (
-            <div className="fade-in-content" style={{ maxWidth: 740 }}>
-              <h1
-                className="display-3 fw-bold mb-1"
-                style={{
-                  fontFamily: 'Space Grotesk, sans-serif',
-                  letterSpacing: -1,
-                  color: isDark ? '#ffffff' : '#222222'
-                }}
-              >
-                Welcome
-              </h1>
-
-              <div
-                className="fs-4 fw-semibold mb-4"
-                style={{
-                  color: isDark ? '#c8ccd8' : '#444444',
-                  letterSpacing: -0.2
-                }}
-              >
-                To MediProcureIQ
-              </div>
-
-              <p
-                className="mx-auto mb-4"
-                style={{
-                  maxWidth: 620,
-                  fontSize: '0.95rem',
-                  lineHeight: 1.7,
-                  color: isDark ? '#82889e' : '#777777'
-                }}
-              >
-                Cloud-based hospital procurement and supplier risk intelligence platform powered by Google Cloud Platform (GCP).
-                Featuring automated GCS ETL pipelines, BigQuery ML delay prediction, multi-criteria vendor optimization, and strict clinical governance.
-              </p>
-
-              <div>
-                <button
-                  className="btn px-5 py-3 rounded-pill fw-bold text-uppercase tracking-wider shadow"
-                  style={{
-                    backgroundColor: isDark ? '#ffffff' : '#2b2b2b',
-                    color: isDark ? '#0b0c10' : '#ffffff',
-                    fontSize: '0.82rem',
-                    letterSpacing: 1.5,
-                    border: 'none',
-                    transition: 'all 0.25s ease'
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 10px 25px rgba(0,0,0,0.3)';
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.transform = 'none';
-                    e.currentTarget.style.boxShadow = '';
-                  }}
-                  onClick={() => setView('login')}
-                >
-                  LOG IN &rarr;
-                </button>
-              </div>
+              MEDIPROCURE<span style={{ color: '#ff7043' }}>IQ</span>
             </div>
-          )}
-
-          {/* Login View ("Then Click Log In Then Yeah Normal Way") */}
-          {view === 'login' && (
             <div
-              className="fade-in-content w-100 text-start"
-              style={{ maxWidth: 840 }}
+              style={{
+                fontSize: '0.65rem',
+                letterSpacing: '1.5px',
+                color: '#b08d7d',
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontWeight: 600
+              }}
             >
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <button
-                  className="btn btn-link p-0 text-decoration-none text-muted small"
-                  onClick={() => setView('welcome')}
-                >
-                  &larr; Back to Welcome
-                </button>
-                <span className="badge role-badge text-uppercase">AUTHENTICATION PORTAL</span>
-              </div>
-
-              <div className="row g-4 align-items-stretch">
-                {/* 1-Click Role Login */}
-                <div className="col-md-6">
-                  <div
-                    className="p-4 h-100 rounded-3 d-flex flex-column justify-content-between"
-                    style={{
-                      backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : '#ffffff',
-                      border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e0e0e0'
-                    }}
-                  >
-                    <div>
-                      <div className="eyebrow mb-2">QUICK DEMONSTRATION ACCESS</div>
-                      <h5 className="fw-bold mb-3 text-uppercase">Select Persona</h5>
-                      <p className="text-muted small mb-3">
-                        Test different roles and Segregation of Duties instantly:
-                      </p>
-
-                      <div className="d-flex flex-column gap-2 mb-3">
-                        <button
-                          className="btn btn-role-select text-start p-2 p-md-3"
-                          disabled={loading}
-                          onClick={() => quickLogin('requester@procureiq.com')}
-                        >
-                          <div className="d-flex justify-content-between align-items-center">
-                            <span className="fw-bold">Ravi Requester</span>
-                            <span className="badge role-badge">REQUESTER</span>
-                          </div>
-                          <small className="text-muted d-block mt-1">Raises requisitions &amp; tracks delivery</small>
-                        </button>
-
-                        <button
-                          className="btn btn-role-select text-start p-2 p-md-3"
-                          disabled={loading}
-                          onClick={() => quickLogin('officer@procureiq.com')}
-                        >
-                          <div className="d-flex justify-content-between align-items-center">
-                            <span className="fw-bold">Olivia Officer</span>
-                            <span className="badge role-badge">OFFICER</span>
-                          </div>
-                          <small className="text-muted d-block mt-1">Evaluates bids, awards contracts &amp; issues POs</small>
-                        </button>
-
-                        <button
-                          className="btn btn-role-select text-start p-2 p-md-3"
-                          disabled={loading}
-                          onClick={() => quickLogin('approver@procureiq.com')}
-                        >
-                          <div className="d-flex justify-content-between align-items-center">
-                            <span className="fw-bold">Manu Manager</span>
-                            <span className="badge role-badge">APPROVER</span>
-                          </div>
-                          <small className="text-muted d-block mt-1">Budget evaluation &amp; financial approval</small>
-                        </button>
-
-                        <button
-                          className="btn btn-role-select text-start p-2 p-md-3"
-                          disabled={loading}
-                          onClick={() => quickLogin('admin@procureiq.com')}
-                        >
-                          <div className="d-flex justify-content-between align-items-center">
-                            <span className="fw-bold">Alice Admin</span>
-                            <span className="badge role-badge">ADMIN</span>
-                          </div>
-                          <small className="text-muted d-block mt-1">Full system administration &amp; user management</small>
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="pt-2 border-top border-secondary-subtle text-muted small">
-                      Demo password: <code>Password@123</code>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Email / Password Sign In or Register */}
-                <div className="col-md-6">
-                  <div
-                    className="p-4 h-100 rounded-3 d-flex flex-column justify-content-between"
-                    style={{
-                      backgroundColor: isDark ? 'rgba(255,255,255,0.03)' : '#ffffff',
-                      border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e0e0e0'
-                    }}
-                  >
-                    <div>
-                      <div className="eyebrow mb-2">{reg ? 'REGISTRATION' : 'NORMAL LOGIN'}</div>
-                      <h5 className="fw-bold mb-3 text-uppercase">{reg ? 'Create Account' : 'Sign In'}</h5>
-
-                      <form onSubmit={submit}>
-                        {reg && (
-                          <div className="mb-3">
-                            <label className="form-label text-muted small text-uppercase tracking-wider">
-                              Full Name
-                            </label>
-                            <input
-                              className="form-control"
-                              placeholder="e.g. John Doe"
-                              value={f.name}
-                              onChange={e => setF({ ...f, name: e.target.value })}
-                              required
-                            />
-                          </div>
-                        )}
-
-                        <div className="mb-3">
-                          <label className="form-label text-muted small text-uppercase tracking-wider">
-                            Email Address
-                          </label>
-                          <input
-                            type="email"
-                            className="form-control"
-                            placeholder="e.g. user@procureiq.com"
-                            value={f.email}
-                            onChange={e => setF({ ...f, email: e.target.value })}
-                            required
-                          />
-                        </div>
-
-                        <div className="mb-3">
-                          <label className="form-label text-muted small text-uppercase tracking-wider">
-                            Password
-                          </label>
-                          <input
-                            type="password"
-                            className="form-control"
-                            placeholder="••••••••"
-                            value={f.password}
-                            onChange={e => setF({ ...f, password: e.target.value })}
-                            required
-                          />
-                        </div>
-
-                        {err && <div className="alert alert-danger py-2 mb-3 small">{err}</div>}
-
-                        <button
-                          className="btn btn-theme-white w-100 py-2 text-uppercase tracking-wider fw-bold mb-3"
-                          disabled={loading}
-                        >
-                          {loading ? 'Authenticating…' : reg ? 'Register' : 'Sign In'}
-                        </button>
-                      </form>
-                    </div>
-
-                    <div className="text-center">
-                      <button
-                        className="btn btn-link text-muted small text-decoration-none"
-                        onClick={() => setReg(!reg)}
-                      >
-                        {reg ? 'Already have an account? Sign In' : 'New user? Register as Requester'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              HEALTHCARE INTELLIGENCE &middot; GCP CLOUD
             </div>
-          )}
-
-          {/* Services Modal / View */}
-          {view === 'services' && (
-            <div className="fade-in-content text-start w-100" style={{ maxWidth: 880 }}>
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <button
-                  className="btn btn-link p-0 text-decoration-none text-muted small"
-                  onClick={() => setView('welcome')}
-                >
-                  &larr; Back to Welcome
-                </button>
-                <div className="eyebrow">ENTERPRISE CAPABILITIES</div>
-              </div>
-
-              <div className="row g-3">
-                <div className="col-md-4">
-                  <div className="feature-card p-3 h-100">
-                    <div className="feature-index mb-2">01 // ALGORITHM</div>
-                    <h6 className="fw-bold mb-2">Fit &amp; Risk Engine</h6>
-                    <div className="formula-badge mb-2">S = 0.35P + 0.30D + 0.25Q + 0.10C</div>
-                    <p className="text-muted small mb-0">
-                      Transparent multi-criteria ranking evaluating price competitiveness, on-time delivery %, quality ratings, and compliance.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="col-md-4">
-                  <div className="feature-card p-3 h-100">
-                    <div className="feature-index mb-2">02 // COMPLIANCE</div>
-                    <h6 className="fw-bold mb-2">Workflow Governance</h6>
-                    <div className="formula-badge mb-2">STRICT NO-SELF-APPROVAL</div>
-                    <p className="text-muted small mb-0">
-                      End-to-end requisition states with Segregation of Duties. Rejection reasons, purchase orders, and partial deliveries.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="col-md-4">
-                  <div className="feature-card p-3 h-100">
-                    <div className="feature-index mb-2">03 // INTELLIGENCE</div>
-                    <h6 className="fw-bold mb-2">Spend Intelligence</h6>
-                    <div className="formula-badge mb-2">REAL-TIME RISK RADAR</div>
-                    <p className="text-muted small mb-0">
-                      Realized savings calculation, department budget tracking, duplicate requisition alerts, and supplier risk level scoring.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* About View */}
-          {view === 'about' && (
-            <div className="fade-in-content text-start w-100" style={{ maxWidth: 740 }}>
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <button
-                  className="btn btn-link p-0 text-decoration-none text-muted small"
-                  onClick={() => setView('welcome')}
-                >
-                  &larr; Back to Welcome
-                </button>
-                <div className="eyebrow">ABOUT PROCUREIQ</div>
-              </div>
-
-              <div className="card p-4">
-                <h5 className="fw-bold text-uppercase mb-3">Enterprise Intelligent Procurement</h5>
-                <p className="text-muted small mb-3">
-                  ProcureIQ addresses the core inefficiencies in enterprise supply chains: fragmented purchase requests,
-                  opaque supplier selection, compliance blind spots, and lack of spend visibility.
-                </p>
-                <div className="row g-3 text-muted small">
-                  <div className="col-6">
-                    <strong className="text-white d-block mb-1">Architecture:</strong>
-                    Vite React frontend, Express.js REST API, MongoDB persistent engine.
-                  </div>
-                  <div className="col-6">
-                    <strong className="text-white d-block mb-1">Security &amp; Standards:</strong>
-                    JWT Bearer authentication, BCrypt password hashing, RBAC &amp; SoD enforcement.
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Contact View */}
-          {view === 'contact' && (
-            <div className="fade-in-content text-start w-100" style={{ maxWidth: 740 }}>
-              <div className="d-flex justify-content-between align-items-center mb-4">
-                <button
-                  className="btn btn-link p-0 text-decoration-none text-muted small"
-                  onClick={() => setView('welcome')}
-                >
-                  &larr; Back to Welcome
-                </button>
-                <div className="eyebrow">COMMUNICATION CHANNELS</div>
-              </div>
-
-              <div className="card p-4">
-                <h5 className="fw-bold text-uppercase mb-3">Enterprise Support &amp; Deployment</h5>
-                <div className="row g-3 small">
-                  <div className="col-md-6">
-                    <div className="text-muted mb-1 text-uppercase">Procurement Operations</div>
-                    <div className="text-white fw-bold">support@procureiq.internal</div>
-                    <div className="text-muted">+91 (800) 473-2873</div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="text-muted mb-1 text-uppercase">Platform Administration</div>
-                    <div className="text-white fw-bold">admin@procureiq.com</div>
-                    <div className="text-muted">Global Operations &amp; Supply Chain Risk Unit</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
 
-        {/* Bottom Minimalist Footer (Clean & Subtle) */}
-        <footer
-          className="d-flex justify-content-between align-items-center px-4 px-md-5 py-3 position-relative"
+        {/* Center Pill Navigation */}
+        <nav className="d-none d-md-flex align-items-center gap-1 p-1 rounded-pill" style={{ backgroundColor: 'rgba(25, 10, 4, 0.75)', border: '1px solid rgba(255, 109, 0, 0.25)', backdropFilter: 'blur(12px)' }}>
+          {[
+            ['simulator', '⚡ Live AI Simulator'],
+            ['quick_login', '👤 Quick Personas'],
+            ['credentials', '🔒 Sign In'],
+            ['architecture', '☁️ Cloud Architecture']
+          ].map(([id, label]) => (
+            <button
+              key={id}
+              className={`btn btn-sm px-3 py-1 rounded-pill text-uppercase fw-semibold ${activeTab === id ? 'text-white' : 'text-muted'}`}
+              style={{
+                fontSize: '0.72rem',
+                letterSpacing: '1px',
+                backgroundColor: activeTab === id ? '#ff5722' : 'transparent',
+                boxShadow: activeTab === id ? '0 0 15px rgba(255, 87, 34, 0.6)' : 'none',
+                transition: 'all 0.2s ease',
+                border: 'none'
+              }}
+              onClick={() => setActiveTab(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
+
+        {/* Right Action Button */}
+        <div className="d-flex align-items-center gap-3">
+          <button
+            className="btn btn-sm px-4 py-2 rounded-pill fw-bold text-uppercase d-flex align-items-center gap-2"
+            style={{
+              background: 'linear-gradient(135deg, #ff5722 0%, #ff8f00 100%)',
+              color: '#ffffff',
+              border: 'none',
+              fontSize: '0.75rem',
+              letterSpacing: '1.5px',
+              boxShadow: '0 0 25px rgba(255, 87, 34, 0.65)'
+            }}
+            onClick={() => setModalOpen(true)}
+          >
+            <span>ACCESS PORTAL &rarr;</span>
+          </button>
+        </div>
+      </header>
+
+      {/* ========================================================
+          HERO SECTION & THE EDGE TERMINAL SHOWCASE
+          ======================================================== */}
+      <main className="container-fluid px-4 px-lg-5 position-relative my-auto py-4" style={{ zIndex: 15 }}>
+        <div className="row g-5 align-items-center">
+          {/* Left Column: Bold Kinetic Typography & Pitch */}
+          <div className="col-lg-6 text-start">
+            {/* Pulsing Eyebrow Badge */}
+            <div className="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3 edge-badge">
+              <span className="edge-live-dot" />
+              <span>EXPERIENCE AT THE EDGE &middot; GCP CLOUD PLATFORM</span>
+            </div>
+
+            {/* Giant Hero Title */}
+            <h1
+              className="display-2 fw-extrabold mb-3 edge-title-gradient"
+              style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                letterSpacing: '-1.5px',
+                lineHeight: 1.05
+              }}
+            >
+              EXPERIENCE <br />
+              AT THE EDGE
+            </h1>
+
+            {/* Sub-headline */}
+            <div
+              className="fs-3 mb-3 edge-subtitle-text"
+              style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700 }}
+            >
+              Healthcare Supply Chain &amp; Supplier Risk Intelligence
+            </div>
+
+            {/* Body Description */}
+            <p className="edge-body-text mb-4" style={{ maxWidth: '540px', fontSize: '1rem', lineHeight: 1.8 }}>
+              Engineered for mission-critical hospital procurement. Orchestrates automated
+              Google Cloud Storage ETL pipelines, in-database BigQuery ML delivery delay prediction,
+              and strict zero-trust segregation of duties across clinical hospital departments.
+            </p>
+
+            {/* Dual Actions */}
+            <div className="d-flex align-items-center gap-3 flex-wrap mb-4">
+              <button
+                className="btn-edge-primary"
+                onClick={() => setModalOpen(true)}
+              >
+                ENTER PROCUREMENT PORTAL &rarr;
+              </button>
+
+              <button
+                className="btn btn-outline-light rounded-pill px-4 py-3 fw-bold text-uppercase"
+                style={{
+                  fontSize: '0.8rem',
+                  letterSpacing: '1px',
+                  borderColor: 'rgba(255, 109, 0, 0.4)',
+                  backgroundColor: 'rgba(255, 87, 34, 0.08)',
+                  color: '#ffccbc'
+                }}
+                onClick={() => setActiveTab('simulator')}
+              >
+                TEST RISK SIMULATOR ⚡
+              </button>
+            </div>
+
+            {/* Real-time Platform Metrics Ticker */}
+            <div className="row g-3 pt-3 border-top border-secondary-subtle" style={{ borderColor: 'rgba(255, 109, 0, 0.2) !important' }}>
+              <div className="col-4">
+                <div className="fs-4 fw-bold text-white font-monospace">1,200+</div>
+                <div className="text-muted small text-uppercase" style={{ fontSize: '0.68rem', letterSpacing: '1px' }}>
+                  Clinical Records
+                </div>
+              </div>
+              <div className="col-4">
+                <div className="fs-4 fw-bold font-monospace" style={{ color: '#ff9800' }}>84.4%</div>
+                <div className="text-muted small text-uppercase" style={{ fontSize: '0.68rem', letterSpacing: '1px' }}>
+                  Delivery Fidelity
+                </div>
+              </div>
+              <div className="col-4">
+                <div className="fs-4 fw-bold font-monospace" style={{ color: '#4caf50' }}>57 / 57</div>
+                <div className="text-muted small text-uppercase" style={{ fontSize: '0.68rem', letterSpacing: '1px' }}>
+                  Unit Tests Passed
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: "The Edge Terminal" Interactive Showcase Card */}
+          <div className="col-lg-6">
+            <div
+              className="edge-canvas-wrapper p-4 p-md-5"
+              style={{
+                backgroundColor: 'rgba(18, 7, 3, 0.88)',
+                minHeight: 520,
+                border: '1px solid rgba(255, 109, 0, 0.35)',
+                boxShadow: '0 30px 100px rgba(0, 0, 0, 0.95), 0 0 60px rgba(255, 87, 34, 0.22)'
+              }}
+            >
+              {/* Terminal Window Header */}
+              <div className="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom" style={{ borderColor: 'rgba(255, 109, 0, 0.2)' }}>
+                <div className="d-flex align-items-center gap-2">
+                  <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ff5252', display: 'inline-block' }} />
+                  <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#ffb142', display: 'inline-block' }} />
+                  <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#2ed573', display: 'inline-block' }} />
+                  <span className="ms-2 font-monospace small" style={{ color: '#ffb74d', fontSize: '0.75rem', letterSpacing: '1px' }}>
+                    TERMINAL // MEDIPROCURE-EDGE-AI
+                  </span>
+                </div>
+
+                <div className="d-flex gap-1">
+                  {['simulator', 'quick_login', 'credentials'].map(tab => (
+                    <button
+                      key={tab}
+                      className={`btn btn-sm px-2 py-0 rounded ${activeTab === tab ? 'bg-danger text-white' : 'text-muted'}`}
+                      style={{
+                        fontSize: '0.68rem',
+                        backgroundColor: activeTab === tab ? 'rgba(255, 87, 34, 0.3)' : 'transparent',
+                        borderColor: activeTab === tab ? '#ff5722' : 'transparent'
+                      }}
+                      onClick={() => setActiveTab(tab)}
+                    >
+                      {tab === 'simulator' ? 'Simulate' : tab === 'quick_login' ? 'Personas' : 'Sign In'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* ========================================================
+                  TAB 1: LIVE INTERACTIVE BIGQUERY ML SIMULATOR
+                  ======================================================== */}
+              {activeTab === 'simulator' && (
+                <div className="fade-in-content text-start">
+                  <div className="d-flex justify-content-between align-items-baseline mb-3">
+                    <div>
+                      <div className="text-uppercase tracking-wider fw-bold text-white small" style={{ letterSpacing: '1.5px' }}>
+                        BigQuery ML Delivery Delay Predictor
+                      </div>
+                      <small className="text-muted">Interactive in-database inference simulation</small>
+                    </div>
+                    <span className={`badge border px-2 py-1 ${simResult?.badgeClass || 'text-warning'}`}>
+                      {simResult?.tier}
+                    </span>
+                  </div>
+
+                  {/* Simulator Sliders & Inputs */}
+                  <div className="space-y-16 mb-4">
+                    {/* Supplier Rating Slider */}
+                    <div>
+                      <div className="d-flex justify-content-between small mb-1">
+                        <span className="text-muted">Supplier Historical Quality Rating:</span>
+                        <span className="fw-bold font-monospace" style={{ color: '#ff9800' }}>{simRating} / 5.0</span>
+                      </div>
+                      <input
+                        type="range"
+                        className="form-range"
+                        min="1.0"
+                        max="5.0"
+                        step="0.1"
+                        value={simRating}
+                        onChange={e => setSimRating(parseFloat(e.target.value))}
+                        style={{ accentColor: '#ff5722' }}
+                      />
+                    </div>
+
+                    {/* On-Time Delivery % Slider */}
+                    <div>
+                      <div className="d-flex justify-content-between small mb-1">
+                        <span className="text-muted">Fulfillment On-Time Rate:</span>
+                        <span className="fw-bold font-monospace" style={{ color: '#ff9800' }}>{simOnTime}%</span>
+                      </div>
+                      <input
+                        type="range"
+                        className="form-range"
+                        min="40"
+                        max="100"
+                        step="1"
+                        value={simOnTime}
+                        onChange={e => setSimOnTime(parseInt(e.target.value, 10))}
+                        style={{ accentColor: '#ff5722' }}
+                      />
+                    </div>
+
+                    {/* Category & Cold Chain Checkbox */}
+                    <div className="row g-2 align-items-center">
+                      <div className="col-7">
+                        <select
+                          className="form-select form-select-sm input-edge text-white"
+                          value={simCategory}
+                          onChange={e => setSimCategory(e.target.value)}
+                        >
+                          <option value="ICU Equipment">ICU Equipment</option>
+                          <option value="Pharmaceuticals">Pharmaceuticals</option>
+                          <option value="Surgical Supplies">Surgical Supplies</option>
+                          <option value="PPE & Sanitization">PPE &amp; Sanitization</option>
+                          <option value="Diagnostic Devices">Diagnostic Devices</option>
+                        </select>
+                      </div>
+                      <div className="col-5">
+                        <div className="form-check small text-start">
+                          <input
+                            type="checkbox"
+                            className="form-check-input"
+                            id="coldCheck"
+                            checked={simColdChain}
+                            onChange={e => setSimColdChain(e.target.checked)}
+                            style={{ accentColor: '#ff5722' }}
+                          />
+                          <label className="form-check-label text-muted" htmlFor="coldCheck">
+                            Cold Chain Req.
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Calculated Probabilities Output Box */}
+                  <div
+                    className="p-3 rounded-3 mb-4"
+                    style={{
+                      backgroundColor: 'rgba(255, 87, 34, 0.08)',
+                      border: '1px solid rgba(255, 109, 0, 0.3)'
+                    }}
+                  >
+                    <div className="row g-2 text-center">
+                      <div className="col-6 border-end" style={{ borderColor: 'rgba(255, 109, 0, 0.2)' }}>
+                        <div className="text-muted small text-uppercase" style={{ fontSize: '0.65rem' }}>Delay Probability</div>
+                        <div className="fs-3 fw-bold font-monospace" style={{ color: simResult?.delayProb > 40 ? '#ff5252' : '#ff9800' }}>
+                          {simResult?.delayProb}%
+                        </div>
+                      </div>
+                      <div className="col-6">
+                        <div className="text-muted small text-uppercase" style={{ fontSize: '0.65rem' }}>Defect Batch Risk</div>
+                        <div className="fs-3 fw-bold font-monospace" style={{ color: simResult?.defectProb > 20 ? '#ff5252' : '#4caf50' }}>
+                          {simResult?.defectProb}%
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-muted small mt-2 pt-2 border-top border-secondary-subtle" style={{ fontSize: '0.78rem' }}>
+                      ⚡ <strong>Recommendation:</strong> {simResult?.recommendation}
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <button
+                    className="btn btn-edge-primary w-100 py-2"
+                    onClick={() => setModalOpen(true)}
+                  >
+                    OPEN FULL PLATFORM WORKFLOW &rarr;
+                  </button>
+                </div>
+              )}
+
+              {/* ========================================================
+                  TAB 2: 1-CLICK PERSONA LOGIN (INSTANT ROLE DEMOS)
+                  ======================================================== */}
+              {activeTab === 'quick_login' && (
+                <div className="fade-in-content text-start">
+                  <div className="text-uppercase tracking-wider fw-bold text-white small mb-1" style={{ letterSpacing: '1.5px' }}>
+                    Select Demo Persona
+                  </div>
+                  <p className="text-muted small mb-3">
+                    Click any role to log in instantly with Role-Based Access Control:
+                  </p>
+
+                  <div className="d-flex flex-column gap-2 mb-3">
+                    <button
+                      className="btn role-card-edge text-start p-2 p-md-3"
+                      disabled={loading}
+                      onClick={() => quickLogin('requester@procureiq.com')}
+                    >
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span className="fw-bold text-white">Ravi Requester</span>
+                        <span className="badge role-badge">REQUESTER</span>
+                      </div>
+                      <small className="text-muted d-block mt-1">Raises requisitions &amp; monitors status</small>
+                    </button>
+
+                    <button
+                      className="btn role-card-edge text-start p-2 p-md-3"
+                      disabled={loading}
+                      onClick={() => quickLogin('officer@procureiq.com')}
+                    >
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span className="fw-bold text-white">Olivia Officer</span>
+                        <span className="badge role-badge">OFFICER</span>
+                      </div>
+                      <small className="text-muted d-block mt-1">Evaluates bids, awards contracts &amp; issues POs</small>
+                    </button>
+
+                    <button
+                      className="btn role-card-edge text-start p-2 p-md-3"
+                      disabled={loading}
+                      onClick={() => quickLogin('approver@procureiq.com')}
+                    >
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span className="fw-bold text-white">Manu Manager</span>
+                        <span className="badge role-badge">APPROVER</span>
+                      </div>
+                      <small className="text-muted d-block mt-1">Executive approvals &amp; no-self-approval rule</small>
+                    </button>
+
+                    <button
+                      className="btn role-card-edge text-start p-2 p-md-3"
+                      disabled={loading}
+                      onClick={() => quickLogin('admin@procureiq.com')}
+                    >
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span className="fw-bold text-white">Alice Admin</span>
+                        <span className="badge role-badge">ADMIN</span>
+                      </div>
+                      <small className="text-muted d-block mt-1">Global administration &amp; user provisioning</small>
+                    </button>
+                  </div>
+
+                  <div className="text-muted small pt-2 border-top border-secondary-subtle">
+                    Default demo password: <code>Password@123</code>
+                  </div>
+                </div>
+              )}
+
+              {/* ========================================================
+                  TAB 3: STANDARD LOGIN / REGISTER FORM
+                  ======================================================== */}
+              {activeTab === 'credentials' && (
+                <div className="fade-in-content text-start">
+                  <div className="text-uppercase tracking-wider fw-bold text-white small mb-1" style={{ letterSpacing: '1.5px' }}>
+                    {reg ? 'Create Hospital Account' : 'Authenticate Credentials'}
+                  </div>
+                  <p className="text-muted small mb-3">
+                    Enter your authorized enterprise credentials to continue:
+                  </p>
+
+                  <form onSubmit={submit}>
+                    {reg && (
+                      <div className="mb-3">
+                        <label className="form-label text-muted small text-uppercase">Full Name</label>
+                        <input
+                          className="form-control input-edge"
+                          placeholder="e.g. Dr. John Doe"
+                          value={f.name}
+                          onChange={e => setF({ ...f, name: e.target.value })}
+                          required
+                        />
+                      </div>
+                    )}
+
+                    <div className="mb-3">
+                      <label className="form-label text-muted small text-uppercase">Email Address</label>
+                      <input
+                        type="email"
+                        className="form-control input-edge"
+                        placeholder="e.g. officer@procureiq.com"
+                        value={f.email}
+                        onChange={e => setF({ ...f, email: e.target.value })}
+                        required
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="form-label text-muted small text-uppercase">Password</label>
+                      <input
+                        type="password"
+                        className="form-control input-edge"
+                        placeholder="••••••••"
+                        value={f.password}
+                        onChange={e => setF({ ...f, password: e.target.value })}
+                        required
+                      />
+                    </div>
+
+                    {err && <div className="alert alert-danger py-2 mb-3 small">{err}</div>}
+
+                    <button
+                      className="btn w-100 py-2 text-uppercase tracking-wider fw-bold mb-3"
+                      style={{
+                        background: 'linear-gradient(135deg, #ff5722 0%, #ff8f00 100%)',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '8px',
+                        boxShadow: '0 0 20px rgba(255, 87, 34, 0.5)'
+                      }}
+                      disabled={loading}
+                    >
+                      {loading ? 'Authenticating…' : reg ? 'Create Account' : 'Sign In To Portal'}
+                    </button>
+                  </form>
+
+                  <div className="text-center">
+                    <button
+                      className="btn btn-link text-muted small text-decoration-none"
+                      onClick={() => setReg(!reg)}
+                    >
+                      {reg ? 'Already have an account? Sign In' : 'New hospital user? Register as Requester'}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* ========================================================
+                  TAB 4: CLOUD ARCHITECTURE OVERVIEW
+                  ======================================================== */}
+              {activeTab === 'architecture' && (
+                <div className="fade-in-content text-start">
+                  <div className="text-uppercase tracking-wider fw-bold text-white small mb-2" style={{ letterSpacing: '1.5px' }}>
+                    Google Cloud Platform Architecture
+                  </div>
+                  <div className="space-y-12 small text-muted">
+                    <div className="p-2 rounded" style={{ backgroundColor: 'rgba(255, 87, 34, 0.08)', border: '1px solid rgba(255, 109, 0, 0.2)' }}>
+                      <strong className="text-white d-block">1. Google Cloud Storage (GCS)</strong>
+                      Raw procurement dataset ingested into <code>gs://mediprocureiq-raw-data</code>.
+                    </div>
+                    <div className="p-2 rounded" style={{ backgroundColor: 'rgba(255, 87, 34, 0.08)', border: '1px solid rgba(255, 109, 0, 0.2)' }}>
+                      <strong className="text-white d-block">2. Serverless Cloud ETL (Cloud Functions/Run)</strong>
+                      Automated cleaning, cold-chain checks, and BigQuery warehouse ingestion.
+                    </div>
+                    <div className="p-2 rounded" style={{ backgroundColor: 'rgba(255, 87, 34, 0.08)', border: '1px solid rgba(255, 109, 0, 0.2)' }}>
+                      <strong className="text-white d-block">3. BigQuery ML &amp; Looker Studio</strong>
+                      In-database Logistic Regression and Gradient Boosted Tree models with BI dashboards.
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* ========================================================
+          FULL-SCREEN AUTHENTICATION MODAL DRAWER
+          ======================================================== */}
+      {modalOpen && (
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center p-3"
           style={{
-            zIndex: 10,
-            borderTop: isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #e0e0e0',
-            fontSize: '0.75rem',
-            color: isDark ? '#6b7280' : '#888888'
+            backgroundColor: 'rgba(7, 2, 0, 0.85)',
+            backdropFilter: 'blur(16px)',
+            zIndex: 100
           }}
+          onClick={() => setModalOpen(false)}
         >
-          <div>ProcureIQ Platform &copy; 2026</div>
-          <div>Intelligent Procurement &amp; Supplier Risk Platform</div>
-        </footer>
-      </div>
+          <div
+            className="edge-canvas-wrapper p-4 p-md-5 w-100"
+            style={{
+              maxWidth: 820,
+              backgroundColor: 'rgba(18, 7, 3, 0.96)',
+              border: '1px solid rgba(255, 109, 0, 0.45)',
+              boxShadow: '0 30px 100px rgba(0, 0, 0, 0.95), 0 0 60px rgba(255, 87, 34, 0.35)'
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom" style={{ borderColor: 'rgba(255, 109, 0, 0.2)' }}>
+              <div>
+                <span className="badge edge-badge text-uppercase mb-1">ENTERPRISE GATEWAY</span>
+                <h4 className="fw-bold mb-0 text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                  Sign In to MediProcureIQ
+                </h4>
+              </div>
+              <button
+                className="btn btn-outline-light btn-sm rounded-circle"
+                style={{ width: 34, height: 34, padding: 0 }}
+                onClick={() => setModalOpen(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="row g-4 text-start">
+              {/* 1-Click Persona Login */}
+              <div className="col-md-6 border-end" style={{ borderColor: 'rgba(255, 109, 0, 0.2)' }}>
+                <div className="eyebrow mb-2" style={{ color: '#ff9800' }}>1-CLICK DEMO ACCESS</div>
+                <p className="text-muted small mb-3">Choose any role to inspect workflow governance:</p>
+                <div className="d-flex flex-column gap-2">
+                  <button className="btn role-card-edge text-start p-2" onClick={() => quickLogin('requester@procureiq.com')}>
+                    <div className="d-flex justify-content-between"><span className="fw-bold">Ravi Requester</span><span className="badge role-badge">REQUESTER</span></div>
+                    <small className="text-muted">Drafts orders</small>
+                  </button>
+                  <button className="btn role-card-edge text-start p-2" onClick={() => quickLogin('officer@procureiq.com')}>
+                    <div className="d-flex justify-content-between"><span className="fw-bold">Olivia Officer</span><span className="badge role-badge">OFFICER</span></div>
+                    <small className="text-muted">Issues POs &amp; delivery</small>
+                  </button>
+                  <button className="btn role-card-edge text-start p-2" onClick={() => quickLogin('approver@procureiq.com')}>
+                    <div className="d-flex justify-content-between"><span className="fw-bold">Manu Manager</span><span className="badge role-badge">APPROVER</span></div>
+                    <small className="text-muted">Signs off approvals</small>
+                  </button>
+                  <button className="btn role-card-edge text-start p-2" onClick={() => quickLogin('admin@procureiq.com')}>
+                    <div className="d-flex justify-content-between"><span className="fw-bold">Alice Admin</span><span className="badge role-badge">ADMIN</span></div>
+                    <small className="text-muted">Global governance</small>
+                  </button>
+                </div>
+              </div>
+
+              {/* Standard Email/Password Form */}
+              <div className="col-md-6">
+                <div className="eyebrow mb-2" style={{ color: '#ff9800' }}>AUTHORIZED LOGIN</div>
+                <form onSubmit={submit}>
+                  <div className="mb-3">
+                    <label className="form-label text-muted small text-uppercase">Email</label>
+                    <input
+                      type="email"
+                      className="form-control input-edge"
+                      placeholder="e.g. approver@procureiq.com"
+                      value={f.email}
+                      onChange={e => setF({ ...f, email: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label text-muted small text-uppercase">Password</label>
+                    <input
+                      type="password"
+                      className="form-control input-edge"
+                      placeholder="••••••••"
+                      value={f.password}
+                      onChange={e => setF({ ...f, password: e.target.value })}
+                      required
+                    />
+                  </div>
+                  {err && <div className="alert alert-danger py-2 small">{err}</div>}
+                  <button
+                    className="btn w-100 py-2 fw-bold text-uppercase"
+                    style={{ background: 'linear-gradient(135deg, #ff5722 0%, #ff8f00 100%)', color: '#fff', border: 'none', borderRadius: 8 }}
+                    disabled={loading}
+                  >
+                    {loading ? 'Verifying…' : 'Authenticate'}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================
+          BOTTOM MINIMALIST FOOTER
+          ======================================================== */}
+      <footer
+        className="d-flex justify-content-between align-items-center px-4 px-lg-5 py-3 position-relative"
+        style={{
+          zIndex: 20,
+          borderTop: '1px solid rgba(255, 109, 0, 0.18)',
+          fontSize: '0.75rem',
+          color: '#b08d7d'
+        }}
+      >
+        <div>MediProcureIQ Platform &copy; 2026 &middot; Healthcare Supply Chain Governance</div>
+        <div className="d-flex gap-3">
+          <span>GCP BigQuery ML</span>
+          <span>Google Cloud Storage</span>
+          <span>Looker Studio BI</span>
+        </div>
+      </footer>
     </div>
   );
 }
