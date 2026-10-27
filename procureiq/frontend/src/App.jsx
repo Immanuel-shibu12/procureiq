@@ -13,16 +13,12 @@ import Chatbot from './components/Chatbot';
 export default function App() {
   const [user, setUser] = useState(null);
   const [ready, setReady] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem('mediprocure_theme') || 'dark');
   const [chatOpen, setChatOpen] = useState(false);
   const nav = useNavigate();
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('mediprocure_theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => setTheme(t => (t === 'dark' ? 'light' : 'dark'));
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -88,26 +84,18 @@ export default function App() {
           <div className="d-flex align-items-center gap-2">
             {/* AI Assistant Sidebar Toggle Button */}
             <button
-              className={`btn btn-sm d-flex align-items-center gap-2 px-3 py-1 rounded-pill ${chatOpen ? 'btn-warning text-dark fw-bold' : 'btn-outline-warning'}`}
+              className={`btn btn-sm d-flex align-items-center gap-2 px-3 py-1 rounded-pill ${chatOpen ? 'btn-primary text-white fw-bold' : 'btn-outline-secondary text-light'}`}
               onClick={() => setChatOpen(!chatOpen)}
               title="Toggle MediProcure AI Assistant Sidebar"
-              style={{ fontSize: '0.82rem' }}
+              style={{ fontSize: '0.82rem', borderColor: 'rgba(139, 92, 246, 0.4)' }}
             >
-              <span>🤖</span>
+              <span className="badge bg-primary text-white" style={{ fontSize: '0.65rem', padding: '2px 5px' }}>AI</span>
               <span className="d-none d-md-inline">MediProcure AI</span>
-              <span className="badge bg-warning-subtle text-warning border border-warning-subtle py-0 px-1" style={{ fontSize: '0.62rem' }}>
+              <span className="badge bg-secondary-subtle text-secondary py-0 px-1" style={{ fontSize: '0.62rem' }}>
                 GCP
               </span>
             </button>
 
-            <button
-              className="btn btn-outline-light btn-sm px-2 py-1"
-              onClick={toggleTheme}
-              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-              aria-label={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-            >
-              {theme === 'dark' ? '☀️' : '🌙'}
-            </button>
             <span className="badge role-badge py-2 px-3">
               {user.name} &middot; <span className="text-uppercase">{user.role}</span>
             </span>
@@ -121,7 +109,7 @@ export default function App() {
       {/* Main Content Body */}
       <main className={`container py-4 flex-grow-1 ${chatOpen ? 'main-with-sidebar' : ''}`}>
         <Routes>
-          <Route path="/" element={<Dashboard user={user} theme={theme} />} />
+          <Route path="/" element={<Dashboard user={user} />} />
           <Route path="/requests" element={<Requests user={user} />} />
           <Route path="/requests/:id" element={<RequestDetail user={user} />} />
           <Route path="/suppliers" element={<Suppliers user={user} />} />

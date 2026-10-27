@@ -30,15 +30,15 @@ const RISK_COLORS = {
   high: '#f87171'
 };
 
-// Accessible status labels with icons
+// Accessible status labels
 const STATUS_ICONS = {
-  draft: '📝 Draft',
-  submitted: '📤 Submitted',
-  under_review: '⏳ Under Review',
-  approved: '✓ Approved',
-  rejected: '✕ Rejected',
-  ordered: '📦 Ordered',
-  delivered: '● Delivered'
+  draft: 'Draft',
+  submitted: 'Submitted',
+  under_review: 'Under Review',
+  approved: 'Approved',
+  rejected: 'Rejected',
+  ordered: 'Ordered',
+  delivered: 'Delivered'
 };
 
 /**
