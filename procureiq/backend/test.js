@@ -58,8 +58,19 @@ async function runTests() {
   let mem;
   try {
     if (mongoose.connection.readyState !== 1) {
-      mem = await MongoMemoryServer.create();
-      await mongoose.connect(mem.getUri());
+      if (process.env.MONGO_URI) {
+        try {
+          await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 3000 });
+          console.log('Connected to configured MongoDB service:', process.env.MONGO_URI.replace(/\/\/[^@]+@/, '//***@'));
+        } catch (e) {
+          console.warn('Configured MongoDB connection failed (' + e.message + '). Falling back to in-memory server…');
+          mem = await MongoMemoryServer.create();
+          await mongoose.connect(mem.getUri());
+        }
+      } else {
+        mem = await MongoMemoryServer.create();
+        await mongoose.connect(mem.getUri());
+      }
     }
     await doSeed();
     server = app.listen(0);

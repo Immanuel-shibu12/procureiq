@@ -15,3 +15,6 @@ data_temp/
 .system_generated/
 *.exe
 mobile_qr.png
+__pycache__/
+**/__pycache__/
+*.pyc
