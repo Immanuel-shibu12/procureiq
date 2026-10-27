@@ -62,7 +62,7 @@ export default function App() {
   ];
 
   return (
-    <div className="app-shell min-vh-100 d-flex flex-column" data-theme={theme}>
+    <div className="app-shell min-vh-100 d-flex flex-column" data-theme="dark">
       {/* Top Navbar */}
       <nav className="navbar navbar-expand px-4 py-3 sticky-top">
         <div className="container-fluid px-0">
