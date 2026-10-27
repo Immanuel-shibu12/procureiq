@@ -13,3 +13,5 @@ Thumbs.db
 data_temp/
 **/data_temp/
 .system_generated/
+*.exe
+mobile_qr.png
