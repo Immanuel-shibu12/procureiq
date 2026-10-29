@@ -1,0 +1,16 @@
+node_modules
+**/node_modules
+dist
+**/dist
+.git
+.gitignore
+.env
+**/.env
+*.log
+**/*.log
+.mongo_data
+**/.mongo_data
+data_temp
+**/data_temp
+.system_generated
+cloud/data/simulated_gcs_bucket
