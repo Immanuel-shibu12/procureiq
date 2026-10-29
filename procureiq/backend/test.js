@@ -422,18 +422,20 @@ async function runTests() {
     if (server) {
       server.close();
     }
-    if (mem) {
+    try {
       await mongoose.disconnect();
-      await mem.stop();
+    } catch (_) {}
+    if (mem) {
+      try {
+        await mem.stop();
+      } catch (_) {}
     }
   }
 
   console.log(`\n========================================`);
   console.log(`Test Results: ${passed} PASSED, ${failed} FAILED`);
   console.log(`========================================`);
-  if (failed > 0) {
-    process.exit(1);
-  }
+  process.exit(failed > 0 ? 1 : 0);
 }
 
 runTests().catch(err => {
