@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'; import react from '@vitejs/plugin-react';
 // /api calls are forwarded to the Express server
 export default defineConfig({
+  base: './',
   plugins: [react()],
   server: {
     port: 5173,
